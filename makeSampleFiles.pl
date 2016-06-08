@@ -29,13 +29,13 @@ chomp $intent;
 
 ###################### BUILDING JUST IDS ######################
 
-if($intent eq 'y'){    
+if($intent eq 'y'){
 	print "\nHow many Records?\n>";
 	my $idlimit = <ARGV>;
 	chomp($idlimit);
 
     my @ids = makeIDs($idlimit,$charlimit);
-    open OUT, ">$cnum\_$pnum$addtext.txt"; 
+    open OUT, ">$cnum\_$pnum$addtext.txt";
     foreach(@ids){
         print OUT "$_\n";
     }
@@ -66,18 +66,18 @@ while($countrySize < $noOfCountries){
 	my $ccode = <ARGV>;
 	chomp($ccode);
 	push @countries, $ccode;
-	
+
 	#### get language code ####
 	print "\nWhat language for $ccode?\n>";
 	my $clang = <ARGV>;
 	chomp($clang);
 	push @languages, $clang;
-	
+
 	#### get number of records for country ####
 	my $ccount = 0;
 	### LIVE records
 	if($lktyp eq 'l' or $lktyp eq 'b'){
-		print "\nHow many LIVE records for \"$ccode\"?\n>";	
+		print "\nHow many LIVE records for \"$ccode\"?\n>";
 		my $livecount = <ARGV>;
 		chomp($livecount);
         push @countryLiveCount, $livecount;
@@ -85,13 +85,13 @@ while($countrySize < $noOfCountries){
 	}
 	### TEST records
 	if($lktyp eq 't' or $lktyp eq 'b'){
-		print "\nHow many TEST records for \"$ccode\"?\n>";	
+		print "\nHow many TEST records for \"$ccode\"?\n>";
 		my $testcount = <ARGV>;
 		chomp($testcount);
         push @countryTestCount, $testcount;
 		$ccount = $ccount+$testcount;
 	}
-	
+
 	$totalRecords = $totalRecords+$ccount;
 	$countrySize = @countries;
 	$counter++;
@@ -109,14 +109,14 @@ chomp($source);
 ###################### ADDITIONAL COLUMN HANDLING ######################
 
 #### Find out how many additional columns we need ####
-my @columns = ('userid','lang','country','source','lktyp','thelink');
+my @columns = ('userid','language','country','source','lktyp','thelink');
 my @colvalues;
 my @newColumns = ();
 
 print "\n@columns\n";
 print "How many additional columns do we need?\n>";
 my $colnum = <ARGV>;
-chomp($colnum); 
+chomp($colnum);
 
 my $noOfColumns = @columns;
 $counter = 0;
@@ -127,13 +127,13 @@ while(@columns < ($colnum+$noOfColumns)){
     chomp($cname);
     push @columns, $cname;
     push @newColumns, $cname;
-	
+
 	#### get value for column ####
 	print "\nWhat value for $cname?\n>";
 	my $cvalue = <ARGV>;
 	chomp($cvalue);
 	push @colvalues, $cvalue;
-	
+
     $counter++;
 }
 
@@ -143,8 +143,8 @@ while(@columns < ($colnum+$noOfColumns)){
 # @languages = language codes to be used for each country.
 # @countryLiveCount = number of LIVE records for each country.
 # @countryTestCount = number of TEST records for each country.
-# @columns = contains the labels for each column.  
-# userid, lang, country, source, lktyp, thelink, [additional cols...]
+# @columns = contains the labels for each column.
+# userid, language, country, source, lktyp, thelink, [additional cols...]
 # @colvalues = values for each additional column
 
 
@@ -162,21 +162,21 @@ foreach(@countries){
     my $lang = $languages[$counter];
     my $liveCount = $countryLiveCount[$counter];
     my $testCount = $countryTestCount[$counter];
-    
+
     if($lktyp eq "l" or $lktyp eq "b"){
         open OUT1, ">$cnum\_$pnum$addtext\_$country\_LIVE.txt";
         foreach(@columns){ #print out column labels
             print OUT1 "$_\t";
         }
     }
-    
+
     if($lktyp eq "t" or $lktyp eq "b"){
         open OUT2, ">$cnum\_$pnum$addtext\_$country\_TEST.txt";
         foreach(@columns){ #print out column labels
             print OUT2 "$_\t";
         }
     }
-    
+
     my $idCounter = 0;
     if($lktyp eq "l" or $lktyp eq "b"){ ##live looping
         while ($idCounter < $liveCount){
@@ -190,7 +190,7 @@ foreach(@countries){
             $idCounter++;
         }
     }
-    
+
     $idCounter = 0;
     if($lktyp eq "t" or $lktyp eq "b"){ ##test looping
         while ($idCounter < $testCount){
@@ -204,17 +204,15 @@ foreach(@countries){
             $idCounter++;
         }
     }
-    
+
     $counter++;
 }
-
-
 
 ###################### SUBROUTINES ######################
 
 #define MakeIDs subroutine
 sub makeIDs {
-#passed arguments - Number of IDs, Length of ID
+#passed arguments - Number of IDs $_[0], Length of IDs $_[1]
     my %used = ();
     open IN, "<usedIDs.txt";
     print "Reading used IDs...\n";
